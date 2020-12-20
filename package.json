@@ -11,8 +11,7 @@
   "author": "Sinu",
   "license": "ISC",
   "dependencies": {
-    "@slack/bolt": "^2.5.0",
-    "dotenv": "^8.2.0"
+    "@slack/bolt": "^2.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
