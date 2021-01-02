@@ -1,4 +1,4 @@
-const { Client } = require("pg");
+const { Pool } = require("pg");
 
 config = {
   connectionString: process.env.DB_CONNECTION_STRING,
@@ -7,6 +7,4 @@ config = {
   idleTimeoutMillis: 30000,
 };
 
-const client = new Client(config);
-
-module.exports = client;
+module.exports = new Pool(config);

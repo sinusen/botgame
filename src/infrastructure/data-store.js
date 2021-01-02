@@ -1,16 +1,7 @@
-// const client = require("./db-client");
-const { Client } = require("pg");
-
-config = {
-  connectionString: process.env.DB_CONNECTION_STRING,
-  max: 20,
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 30000,
-};
+const pool = require("./db-client");
 
 const createGame = async (dataObj, userId) => {
-  const client = new Client(config);
-  await client.connect();
+  const client = await pool.connect();
 
   const query = {
     text: `INSERT INTO 
@@ -38,13 +29,12 @@ const createGame = async (dataObj, userId) => {
       errorText: err,
     };
   } finally {
-    client.end();
+    client.release();
   }
 };
 
 const retrieveGame = async (user) => {
-  const client = new Client(config);
-  await client.connect();
+  const client = await pool.connect();
 
   const query = {
     text: `SELECT
@@ -89,13 +79,12 @@ const retrieveGame = async (user) => {
       userGameStatus: null,
     };
   } finally {
-    client.end();
+    client.release();
   }
 };
 
 const updateGame = async (id, { status, gameSecret }) => {
-  const client = new Client(config);
-  await client.connect();
+  const client = await pool.connect();
 
   const query = {
     text: `UPDATE 
@@ -121,7 +110,7 @@ const updateGame = async (id, { status, gameSecret }) => {
       errorText: err,
     };
   } finally {
-    client.end();
+    client.release();
   }
 };
 
