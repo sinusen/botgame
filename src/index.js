@@ -1,5 +1,5 @@
 const { App } = require("@slack/bolt");
-const { startGame } = require("./game");
+const { startGame, playGame } = require("./game");
 const slackMessages = require("./constants");
 
 // Initializes your app with your bot token and signing secret
@@ -39,13 +39,14 @@ app.command("/guessgame", async ({ command, ack, say }) => {
 });
 
 app.message(async ({ message, say }) => {
+  let response = null;
   switch (true) {
     case NUMBER_MATCH.test(message.text):
       console.log("Matched number");
-      const response = await playGame(message.user, Number(message.text));
+      response = await playGame(message.user, Number(message.text));
       break;
   }
-  await say(analyzeResponse(command.user_id, response));
+  await say(analyzeResponse(message.user, response));
 });
 
 function analyzeResponse(userId, response) {
@@ -53,7 +54,7 @@ function analyzeResponse(userId, response) {
     if (response.gameInProgress) {
       return slackMessages.inProgressAlert;
     }
-    if (!response.gameInProgress) {
+    if (response.gameInProgress === false) {
       return slackMessages.startMessage(userId, response.numberOfTurns);
     }
     if (response.correctResult === true) {

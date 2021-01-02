@@ -73,6 +73,7 @@ async function playGame(userId, userGuess) {
       userNotFound: false,
     };
   }
+
   return {
     error: false,
     userNotFound: false,
@@ -86,4 +87,4 @@ function reconstructGame({ gameSecret, remainingTries }) {
   return new randomGuessGame(remainingTries, () => gameSecret);
 }
 
-module.exports = { startGame };
+module.exports = { startGame, playGame };
