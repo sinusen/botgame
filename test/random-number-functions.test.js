@@ -1,6 +1,6 @@
 const {
   randomNumberGeneratorInInterval,
-} = require("./random-number-functions");
+} = require("../src/random-number-functions");
 
 test("Lowest possible value is always start of the range", () => {
   const startOfRange = 1;

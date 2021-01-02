@@ -1,14 +1,6 @@
-const { Client } = require("pg");
-
-config = {
-  connectionString: process.env.DB_CONNECTION_STRING,
-  max: 20,
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 30000,
-};
+const client = require("./db-client");
 
 const createGame = async (dataObj, userId) => {
-  const client = new Client(config);
   client.connect();
 
   const query = {
@@ -42,7 +34,6 @@ const createGame = async (dataObj, userId) => {
 };
 
 const retrieveGame = async (user) => {
-  const client = new Client(config);
   client.connect();
 
   const query = {
@@ -93,7 +84,6 @@ const retrieveGame = async (user) => {
 };
 
 const updateGame = async (id, { status, gameSecret }) => {
-  const client = new Client(config);
   client.connect();
 
   const query = {

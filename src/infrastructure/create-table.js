@@ -1,4 +1,4 @@
-const client = require("./dbClient");
+const client = require("./db-client");
 
 const createTable = async () => {
   client.connect();
