@@ -72,6 +72,7 @@ app.command(process.env.SLASH_COMMAND, async ({ command, ack, say }) => {
       command.user_id,
       gameResponse
     );
+    console.debug("Game start response", { noResponse, message });
     if (noResponse) {
       return;
     }
