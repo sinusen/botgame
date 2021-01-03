@@ -3,7 +3,7 @@ const {
   createRecord,
   retrieveRecord,
   updateRecord,
-} = require("./infrastructure/data-store");
+} = require("./infrastructure/game-store");
 
 //Global constants
 const NUMBER_OF_TURNS = 3;
@@ -15,14 +15,12 @@ async function startGame(userId, forceStart = false) {
       return {
         error: true,
         gameInProgress: null,
-        numberOfTurns: NUMBER_OF_TURNS,
       };
     }
     if (userExists && !userGameStatus.gameOver) {
       return {
         error: false,
         gameInProgress: true,
-        numberOfTurns: NUMBER_OF_TURNS,
       };
     }
   }
@@ -31,21 +29,18 @@ async function startGame(userId, forceStart = false) {
 
 async function createNewGame(userId) {
   const game = new randomGuessGame(NUMBER_OF_TURNS);
-  const storeReturn = await createRecord(game, userId);
+  const { error } = await createRecord(game, userId);
 
-  if (!storeReturn.error) {
-    return {
-      error: false,
-      gameInProgress: false,
-      numberOfTurns: NUMBER_OF_TURNS,
-    };
-  } else {
+  if (error) {
     return {
       error: true,
       gameInProgress: false,
-      numberOfTurns: NUMBER_OF_TURNS,
     };
   }
+  return {
+    error: false,
+    gameInProgress: false,
+  };
 }
 
 //Function to play the game
@@ -55,7 +50,6 @@ async function playGame(userId, userGuess) {
   if (error || !userExists || userGameStatus.gameOver) {
     return {
       error: true,
-      userNotFound: true,
     };
   }
 
@@ -70,13 +64,11 @@ async function playGame(userId, userGuess) {
   if (updateResponse.error) {
     return {
       error: true,
-      userNotFound: false,
     };
   }
 
   return {
     error: false,
-    userNotFound: false,
     gameSecret: game.gameSecret,
     ...game.status,
   };
@@ -87,4 +79,4 @@ function reconstructGame({ gameSecret, remainingTries }) {
   return new randomGuessGame(remainingTries, () => gameSecret);
 }
 
-module.exports = { startGame, playGame };
+module.exports = { startGame, playGame, NUMBER_OF_TURNS };

@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.js",
     "test": "jest",
     "start": "node src/index.js",
-    "setup": "node src/infrastructure/create-table.js"
+    "setup": "node src/infrastructure/setup-db.js"
   },
   "author": "Sinu",
   "license": "ISC",

@@ -3,9 +3,8 @@ const inProgressAlert =
 
 function startMessage(userId, numberOfTurns) {
   return `Welcome <@${userId}> to the guess game. The rules of the game are simple. I,the computer will think of a number between 1 and 10.\
-      You will be given ${numberOfTurns} chances to guess the number. If you guess a number higher than what I thought, I will say higher. If you \
-      guess a number lower than I thought, I will say lower. May be I will give a few more hints to make it easier for you. \
-      Let us start the game now. `;
+ You will be given ${numberOfTurns} chances to guess the number.\
+ Let us start the game now.`;
 }
 
 function loseMessage(gameSecret) {
@@ -18,6 +17,9 @@ const goLower = "The number I have in mind is lower.";
 
 const goHigher = "The number I have in mind is higher.";
 
+const invalidCommand =
+  'Please enter a valid command. The valid commands are "start" and "restart".';
+
 module.exports = {
   inProgressAlert,
   startMessage,
@@ -25,4 +27,5 @@ module.exports = {
   loseMessage,
   goLower,
   goHigher,
+  invalidCommand,
 };

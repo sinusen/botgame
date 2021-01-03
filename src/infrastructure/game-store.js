@@ -1,4 +1,4 @@
-//data-store.js is used to store, retrieve and update records in PostgreSQL database. It exports the following functions.
+//game-store.js is used to store, retrieve and update records in PostgreSQL database. It exports the following functions.
 
 //createRecord - creates a new record in the database
 //Inputs - {data: Object {gameSecret: integer, gameOver: Boolean, remainingTries: number} /*data to be stored*/,
