@@ -1,6 +1,22 @@
+//data-store.js is used to store, retrieve and update records in PostgreSQL database. It exports the following functions.
+
+//createRecord - creates a new record in the database
+//Inputs - {data: Object {gameSecret: integer, gameOver: Boolean, remainingTries: number} /*data to be stored*/,
+//userId: text /*user identification for the data*/}
+//Outputs - {error: Boolean}
+
+//retrieveRecord - retrieves the last record associated with a user from the database
+//Inputs - {userId: text /*user identification*/}
+//Outputs - {error: Boolean, userExists: Boolean /*User record exists in the database*/,
+//userGameStatus: Object {id: integer, userId: text, gameSecret: number, gameOver:Boolean, remainingTries: number}}
+
+//updateRecord - updates a user record in the database
+//Inputs - {id: text /*user identification*/, {status: Object {gameOver: Boolean, remainingTries: Number}, gameSecret: number /*Bot generated random number*/}}
+//Outputs - {error: Boolean}
+
 const pool = require("./db-client");
 
-const createGame = async (dataObj, userId) => {
+const createRecord = async (dataObj, userId) => {
   const client = await pool.connect();
 
   const query = {
@@ -20,20 +36,19 @@ const createGame = async (dataObj, userId) => {
   try {
     const res = await client.query(query);
     return {
-      status: true,
+      error: false,
     };
   } catch (err) {
     console.error(err);
     return {
-      status: false,
-      errorText: err,
+      error: true,
     };
   } finally {
     client.release();
   }
 };
 
-const retrieveGame = async (user) => {
+const retrieveRecord = async (user) => {
   const client = await pool.connect();
 
   const query = {
@@ -83,7 +98,7 @@ const retrieveGame = async (user) => {
   }
 };
 
-const updateGame = async (id, { status, gameSecret }) => {
+const updateRecord = async (id, { status, gameSecret }) => {
   const client = await pool.connect();
 
   const query = {
@@ -101,17 +116,16 @@ const updateGame = async (id, { status, gameSecret }) => {
   try {
     const res = await client.query(query);
     return {
-      status: true,
+      error: false,
     };
   } catch (err) {
     console.error(err);
     return {
-      status: false,
-      errorText: err,
+      error: true,
     };
   } finally {
     client.release();
   }
 };
 
-module.exports = { createGame, retrieveGame, updateGame };
+module.exports = { createRecord, retrieveRecord, updateRecord };

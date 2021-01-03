@@ -1,8 +1,8 @@
 const randomGuessGame = require("./random-guess-game");
 const {
-  createGame,
-  retrieveGame,
-  updateGame,
+  createRecord,
+  retrieveRecord,
+  updateRecord,
 } = require("./infrastructure/data-store");
 
 //Global constants
@@ -10,7 +10,7 @@ const NUMBER_OF_TURNS = 3;
 
 async function startGame(userId, forceStart = false) {
   if (!forceStart) {
-    const { error, userExists, userGameStatus } = await retrieveGame(userId);
+    const { error, userExists, userGameStatus } = await retrieveRecord(userId);
     if (error) {
       return {
         error: true,
@@ -31,9 +31,9 @@ async function startGame(userId, forceStart = false) {
 
 async function createNewGame(userId) {
   const game = new randomGuessGame(NUMBER_OF_TURNS);
-  const storeReturn = await createGame(game, userId);
+  const storeReturn = await createRecord(game, userId);
 
-  if (storeReturn.status) {
+  if (!storeReturn.error) {
     return {
       error: false,
       gameInProgress: false,
@@ -50,7 +50,7 @@ async function createNewGame(userId) {
 
 //Function to play the game
 async function playGame(userId, userGuess) {
-  const { error, userExists, userGameStatus } = await retrieveGame(userId);
+  const { error, userExists, userGameStatus } = await retrieveRecord(userId);
 
   if (error || !userExists || userGameStatus.gameOver) {
     return {
@@ -66,8 +66,8 @@ async function playGame(userId, userGuess) {
   game.checkGuess(userGuess);
 
   //Saves the game to database
-  const updateResponse = await updateGame(userGameStatus.id, game);
-  if (!updateResponse.status) {
+  const updateResponse = await updateRecord(userGameStatus.id, game);
+  if (updateResponse.error) {
     return {
       error: true,
       userNotFound: false,
