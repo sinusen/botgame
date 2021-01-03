@@ -33,7 +33,7 @@ const get = async (id) => {
     text: `SELECT
             access_token
           FROM 
-            db.worksapce_users
+            db.workspace_users
           WHERE
             id = $1
           ORDER BY
