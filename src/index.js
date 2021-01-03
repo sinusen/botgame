@@ -1,11 +1,43 @@
 const { App } = require("@slack/bolt");
 const { startGame, playGame } = require("./game");
+const database = require("./infrastructure/workspace-store");
 const slackMessages = require("./constants");
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
+  clientId: process.env.SLACK_CLIENT_ID,
+  clientSecret: process.env.SLACK_CLIENT_SECRET,
+  stateSecret: "my-state-secret",
+  scopes: [
+    "channels:history",
+    "chat:write",
+    "chat:write.public",
+    "commands",
+    "groups:history",
+    "im:history",
+    "mpim:history",
+  ],
+  installationStore: {
+    storeInstallation: async (installation) => {
+      // change the line below so it saves to your database
+      return await database.set(installation.team.id, installation);
+    },
+    fetchInstallation: async (InstallQuery) => {
+      // change the line below so it fetches from your database
+      return await database.get(InstallQuery.teamId);
+    },
+    storeOrgInstallation: async (installation) => {
+      // include this method if you want your app to support org wide installations
+      // change the line below so it saves to your database
+      return await database.set(installation.enterprise.id, installation);
+    },
+    fetchOrgInstallation: async (InstallQuery) => {
+      // include this method if you want your app to support org wide installations
+      // change the line below so it fetches from your database
+      return await database.get(InstallQuery.enterpriseId);
+    },
+  },
 });
 
 //Regular expressions
