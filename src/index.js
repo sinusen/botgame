@@ -14,7 +14,7 @@ const RESTART_PATTERN = new RegExp(`^restart$`, "i");
 const NUMBER_MATCH = new RegExp(`^[0-9]|10$`);
 
 // Listens to incoming messages
-app.command("/guessgame", async ({ command, ack, say }) => {
+app.command(process.env.SLASH_COMMAND, async ({ command, ack, say }) => {
   let response = null;
 
   // Acknowledge command request
@@ -34,7 +34,7 @@ app.command("/guessgame", async ({ command, ack, say }) => {
       break;
   }
   if (response) {
-    await say(analyzeResponse(command.user_id, response));
+    analyzeResponse(command.user_id, response, say);
   }
 });
 
@@ -46,28 +46,28 @@ app.message(async ({ message, say }) => {
       response = await playGame(message.user, Number(message.text));
       break;
   }
-  await say(analyzeResponse(message.user, response));
+  analyzeResponse(message.user, response, say);
 });
 
-function analyzeResponse(userId, response) {
+async function analyzeResponse(userId, response, say) {
   if (!response.error) {
     if (response.gameInProgress) {
-      return slackMessages.inProgressAlert;
+      await say(slackMessages.inProgressAlert);
     }
     if (response.gameInProgress === false) {
-      return slackMessages.startMessage(userId, response.numberOfTurns);
+      await say(slackMessages.startMessage(userId, response.numberOfTurns));
     }
     if (response.correctResult === true) {
-      return slackMessages.winMessage;
+      await say(slackMessages.winMessage);
     }
     if (response.gameOver) {
-      return slackMessages.loseMessage(response.gameSecret);
+      await say(slackMessages.loseMessage(response.gameSecret));
     }
     if (response.isGreater) {
-      return slackMessages.goLower;
+      await say(slackMessages.goLower);
     }
     if (response.isGreater === false) {
-      return slackMessages.goHigher;
+      await say(slackMessages.goHigher);
     }
   }
 }
