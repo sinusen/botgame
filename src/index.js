@@ -21,20 +21,24 @@ const app = new App({
   installationStore: {
     storeInstallation: async (installation) => {
       // change the line below so it saves to your database
+      console.log(installation);
       return await database.set(installation.team.id, installation);
     },
     fetchInstallation: async (InstallQuery) => {
       // change the line below so it fetches from your database
+      console.log(InstallQuery);
       return await database.get(InstallQuery.teamId);
     },
     storeOrgInstallation: async (installation) => {
       // include this method if you want your app to support org wide installations
       // change the line below so it saves to your database
+      console.log(installation);
       return await database.set(installation.enterprise.id, installation);
     },
     fetchOrgInstallation: async (InstallQuery) => {
       // include this method if you want your app to support org wide installations
       // change the line below so it fetches from your database
+      console.log(InstallQuery);
       return await database.get(InstallQuery.enterpriseId);
     },
   },
