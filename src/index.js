@@ -68,11 +68,12 @@ app.command(process.env.SLASH_COMMAND, async ({ command, ack, say }) => {
       break;
   }
   if (gameResponse) {
+    console.debug("Game start response", gameResponse);
     const { noResponse, message } = slackifyGameStart(
       command.user_id,
       gameResponse
     );
-    console.debug("Game start response", { noResponse, message });
+    console.debug("Slackify game start response", { noResponse, message });
     if (noResponse) {
       return;
     }
@@ -98,7 +99,7 @@ app.message(async ({ message, say }) => {
   }
 });
 
-async function slackifyGameStart(userId, response) {
+function slackifyGameStart(userId, response) {
   if (response.error) {
     return {
       noResponse: true,
@@ -117,7 +118,7 @@ async function slackifyGameStart(userId, response) {
   };
 }
 
-async function slackifyGameRun(response) {
+function slackifyGameRun(response) {
   if (response.error) {
     return {
       noResponse: true,
