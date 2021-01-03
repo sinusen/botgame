@@ -4,7 +4,7 @@ const inProgressAlert =
   'User already has a game in progress. Use the restart command ("/guessgame restart") to start a new game.';
 
 function startMessage(userId, numberOfTurns) {
-  return `Welcome <@${userId}> to the guess game. The rules of the game are simple. I, the computer will think of a number between 1 and 10.\
+  return `Welcome <@${userId}> to the guess game. The rules of the game are simple. I, the computer will think of a number from 0 to 10.\
  You will be given ${numberOfTurns} chances to guess the number.\
  Let us start the game now.
  _Make sure that guessgame is added to your channel. To add enter "/invite @guessgame"._`;
