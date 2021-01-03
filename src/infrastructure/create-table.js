@@ -1,7 +1,7 @@
-const client = require("./db-client");
+const pool = require("./db-client");
 
-const createTable = async () => {
-  client.connect();
+const createTables = async () => {
+  const client = await pool.connect();
 
   const query = {
     text: `CREATE TABLE db.slack_users
@@ -15,6 +15,15 @@ const createTable = async () => {
         CONSTRAINT slack_users_pkey PRIMARY KEY (pk)
     )
     
+    TABLESPACE pg_default;
+    CREATE TABLE db.workspace_users
+    (
+    pk serial,
+    id character varying COLLATE pg_catalog."default" NOT NULL,
+    access_token character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT workspace_users_pkey PRIMARY KEY (pk)
+    )
+
     TABLESPACE pg_default;`,
   };
   try {
@@ -24,8 +33,9 @@ const createTable = async () => {
     console.error("DB setup error");
     console.error(err);
   } finally {
-    client.end();
+    client.release();
   }
+  return;
 };
 
-createTable();
+createTables();

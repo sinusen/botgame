@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.js",
     "test": "jest",
     "start": "node src/index.js",
-    "setup": "node src/createDBTable.js"
+    "setup": "node src/infrastructure/create-table.js"
   },
   "author": "Sinu",
   "license": "ISC",
