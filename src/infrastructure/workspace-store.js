@@ -47,7 +47,7 @@ const get = async (id) => {
     if (res.rowCount === 0) {
       return null;
     }
-
+    console.log(res.rows[0].access_token);
     return res.rows[0].access_token;
   } catch (err) {
     console.error(err);
