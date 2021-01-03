@@ -57,16 +57,16 @@ async function analyzeResponse(userId, response, say) {
     if (response.gameInProgress === false) {
       await say(slackMessages.startMessage(userId, response.numberOfTurns));
     }
-    if (response.correctResult === true) {
+    if (response.correctResult) {
       await say(slackMessages.winMessage);
     }
-    if (response.gameOver) {
+    if (response.correctResult === false && response.gameOver) {
       await say(slackMessages.loseMessage(response.gameSecret));
     }
-    if (response.isGreater) {
+    if (response.isGreater && response.gameOver === false) {
       await say(slackMessages.goLower);
     }
-    if (response.isGreater === false) {
+    if (response.isGreater === false && response.gameOver === false) {
       await say(slackMessages.goHigher);
     }
   }
