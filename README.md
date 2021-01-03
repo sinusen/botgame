@@ -3,9 +3,9 @@
 ## Setup
 
 Set the following environment variables
-`DB_CONNECTION_STRING`, `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET` and `SLASH_COMMAND`
+`DB_CONNECTION_STRING`, `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET` and `SLACK_STATE_SECRET`.
 
-> [Create a slack application](https://api.slack.com/apps?new_app=1) to get the `SLACK_BOT_TOKEN` and `SLACK_SIGNING_SECRET`. This [link](https://slack.dev/bolt-js/tutorial/getting-started) can provide detailed instructions on how to set up an app and add required permissions.<br>Bot token(`xoxb`) and scopes are used by the app to perform the necessary reads and writes on the workspace. The required scopes are automatically added by adding the following bot event subscriptions.
+> [Create a slack application](https://api.slack.com/apps?new_app=1) to get the `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET` and `SLACK_SIGNING_SECRET`. `SLACK_STATE_SECRET` can be any random string. This [link](https://slack.dev/bolt-js/tutorial/getting-started) can provide detailed instructions on how to set up an app and add required permissions.<br>Scopes are used by the app to perform the necessary reads and writes on the workspace. The required scopes are automatically added when adding the following bot event subscriptions.
 >
 > ```
 > message.channels
@@ -50,6 +50,15 @@ npm run start
 
 ## USAGE
 
+Add the bot to the workspace by installing the application from the following link.
+https://slackbotgame.herokuapp.com/slack/install
+
+> You may need to add the bot to the Slack channel to play the game. Execute the following command in each workspace channel to add guessgame bot.
+>
+> ```
+> /invite @guessgame
+> ```
+
 Execute the following slash command to run the game.
 
 ```
@@ -64,6 +73,6 @@ Execute the following slash command to restart the game when the user already ha
 
 ## DEPENDENCIES
 
-`Bolt` library is used in this application to interact with the Slack workspace. The library has methods to listen and respond to `events`, `commands`, `actions`, `shortcuts` etc.<br> By default Bolt uses `/slack/events` endpoint to listen to incoming requests. This endpoint should be appended to all request urls configured in Slack. The Bolt library also automatically responds to the `challenge` request sent by Slack on the request url added to event subscription.
+[Bolt](https://slack.dev/bolt-js/tutorial/getting-started) library is used in this application to interact with the Slack workspace. The library is recommended by Slack and has methods to listen and respond to `events`, `commands`, `actions`, `shortcuts` etc. The Bolt library also automatically responds to the `challenge` request sent by Slack on the request url added to event subscription. The Bolt library also includes OAuth support which make the application distributable to multiple workspaces.
 
-`node-postgres (pg)` library is used for interfacing with PostgreSQL databasae. The program uses pooling to hold a reusable pool of clients. `db-client.js` in `src\infrastructure` holds the configuration for the pg-pool. The single pool object contained in `db-client.js` is distributed across all use files (only `data-store.js` in `src\infrastructure` in this case). `connect()`, `query()` and `release()` methods are used to create a client, run the query and release the client back to the pool.
+[node-postgres (pg)](https://node-postgres.com/) library is used for interacting with PostgreSQL database. The program uses pooling to hold a reusable pool of clients. `db-clientpool.js` in `src\infrastructure` holds the configuration for the pg-pool. The single pool object contained in `db-clientpool.js` is distributed across all files which need database connection.

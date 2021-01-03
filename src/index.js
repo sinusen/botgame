@@ -1,3 +1,5 @@
+// index.js - Listens and responds to slack messages and commands
+
 const { App, LogLevel } = require("@slack/bolt");
 const { startGame, playGame, NUMBER_OF_TURNS } = require("./game");
 const database = require("./infrastructure/oauth-store");
@@ -7,9 +9,9 @@ const logLevel =
   process.env.PRODUCTION === "true" ? LogLevel.INFO : LogLevel.DEBUG;
 
 // Initializes the Slack app
-//Enables OAuth support which make the application distributable to
-//multiple workspaces
-//https://slack.dev/bolt-js/concepts#authenticating-oauth
+// Enables OAuth support which make the application distributable to
+// multiple workspaces
+// https://slack.dev/bolt-js/concepts#authenticating-oauth
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   clientId: process.env.SLACK_CLIENT_ID,
@@ -41,45 +43,48 @@ const app = new App({
   logLevel,
 });
 
-//Pattern to filter incoming commands and messages
+// Pattern to filter incoming commands and messages
 const START_PATTERN = new RegExp(`^start$`, "i");
 const RESTART_PATTERN = new RegExp(`^restart$`, "i");
 const NUMBER_MATCH = new RegExp(`^[0-9]|10$`);
 
 // Listens to incoming command
-app.command(process.env.SLASH_COMMAND, async ({ command, ack, say }) => {
-  let gameResponse = null;
+app.command(
+  process.env.SLASH_COMMAND || "/guessgame",
+  async ({ command, ack, say }) => {
+    let gameResponse = null;
 
-  // Acknowledge command request
-  await ack();
+    // Acknowledge command request
+    await ack();
 
-  switch (true) {
-    case START_PATTERN.test(command.text):
-      console.debug("Matched start");
-      gameResponse = await startGame(command.user_id);
-      break;
-    case RESTART_PATTERN.test(command.text):
-      console.debug("Matched restart");
-      gameResponse = await startGame(command.user_id, true);
-      break;
-    default:
-      console.debug("Invalid command", command.text);
-      await say(slackMessages.invalidCommand);
-      break;
-  }
-  if (gameResponse) {
-    console.debug("Game start response", gameResponse);
-    const { noResponse, message } = slackifyGameStart(
-      command.user_id,
-      gameResponse
-    );
-    console.debug("Slackify game start response", { noResponse, message });
-    if (noResponse) {
-      return;
+    switch (true) {
+      case START_PATTERN.test(command.text):
+        console.debug("Matched start");
+        gameResponse = await startGame(command.user_id);
+        break;
+      case RESTART_PATTERN.test(command.text):
+        console.debug("Matched restart");
+        gameResponse = await startGame(command.user_id, true);
+        break;
+      default:
+        console.debug("Invalid command", command.text);
+        await say(slackMessages.invalidCommand);
+        break;
     }
-    await say(message);
+    if (gameResponse) {
+      console.debug("Game start response", gameResponse);
+      const { noResponse, message } = slackifyGameStart(
+        command.user_id,
+        gameResponse
+      );
+      console.debug("Slackify game start response", { noResponse, message });
+      if (noResponse) {
+        return;
+      }
+      await say(message);
+    }
   }
-});
+);
 
 // Listens to incoming messages
 app.message(async ({ message, say }) => {
@@ -149,7 +154,7 @@ function slackifyGameRun(response) {
   };
 }
 
-//Function to display any message to slack
+// Function to display any message to slack
 (async () => {
   //Start your app
   await app.start(process.env.PORT || 3000);

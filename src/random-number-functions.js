@@ -1,3 +1,5 @@
+// random-number-functions.js - Support library to generate random number in an interval
+
 const randomNumberGeneratorInInterval = (
   start,
   end,

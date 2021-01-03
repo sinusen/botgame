@@ -1,10 +1,13 @@
-const pool = require("./db-client");
+// setup-db.js - Database setup script. Creates database tables for handling game and workspace authentication data.
+// Execute only once for a database.
+
+const pool = require("./db-clientpool");
 
 const createTables = async () => {
   const client = await pool.connect();
 
   const query = {
-    text: `CREATE TABLE db.slack_users
+    text: `CREATE TABLE IF NOT EXISTS db.slack_users
     (
         pk serial,
         user_id character varying COLLATE pg_catalog."default" NOT NULL,
@@ -16,7 +19,7 @@ const createTables = async () => {
     )
     
     TABLESPACE pg_default;
-    CREATE TABLE db.workspace_users
+    CREATE TABLE IF NOT EXISTS db.workspace_users
     (
     pk serial,
     id character varying COLLATE pg_catalog."default" NOT NULL,

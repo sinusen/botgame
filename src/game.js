@@ -1,3 +1,5 @@
+// game.js - Starts, manages and persists game status
+
 const randomGuessGame = require("./random-guess-game");
 const {
   createRecord,
@@ -5,7 +7,6 @@ const {
   updateRecord,
 } = require("./infrastructure/game-store");
 
-//Global constants
 const NUMBER_OF_TURNS = 3;
 
 async function startGame(userId, forceStart = false) {
@@ -43,7 +44,6 @@ async function createNewGame(userId) {
   };
 }
 
-//Function to play the game
 async function playGame(userId, userGuess) {
   const { error, userExists, userGameStatus } = await retrieveRecord(userId);
 
@@ -53,13 +53,12 @@ async function playGame(userId, userGuess) {
     };
   }
 
-  //Creates a game with the retrieved data
+  // Creates game object from persisted data
   const game = reconstructGame(userGameStatus);
 
-  //Checks the user guess against the game secret
+  // Game play
   game.checkGuess(userGuess);
 
-  //Saves the game to database
   const updateResponse = await updateRecord(userGameStatus.id, game);
   if (updateResponse.error) {
     return {
@@ -74,7 +73,6 @@ async function playGame(userId, userGuess) {
   };
 }
 
-//Function to create a game object
 function reconstructGame({ gameSecret, remainingTries }) {
   return new randomGuessGame(remainingTries, () => gameSecret);
 }

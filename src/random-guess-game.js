@@ -1,3 +1,5 @@
+// random-guess-game.js - Game engine
+
 const {
   randomNumberGeneratorInInterval,
 } = require("./random-number-functions");
@@ -19,6 +21,7 @@ class RandomGuessGame {
     };
     this.gameSecret = secretGenerator();
   }
+
   checkGuess(number) {
     if (this.status.gameOver) {
       return this.status;

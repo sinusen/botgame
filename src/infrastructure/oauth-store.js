@@ -1,4 +1,6 @@
-const pool = require("./db-client");
+// oauth-store.js - Persists authentication for different Slack workspaces
+
+const pool = require("./db-clientpool");
 
 const set = async (id, accessToken) => {
   const client = await pool.connect();

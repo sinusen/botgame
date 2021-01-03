@@ -1,20 +1,6 @@
-//game-store.js is used to store, retrieve and update records in PostgreSQL database. It exports the following functions.
+//game-store.js - Store, retrieve and update game records in PostgreSQL database
 
-//createRecord - creates a new record in the database
-//Inputs - {data: Object {gameSecret: integer, gameOver: Boolean, remainingTries: number} /*data to be stored*/,
-//userId: text /*user identification for the data*/}
-//Outputs - {error: Boolean}
-
-//retrieveRecord - retrieves the last record associated with a user from the database
-//Inputs - {userId: text /*user identification*/}
-//Outputs - {error: Boolean, userExists: Boolean /*User record exists in the database*/,
-//userGameStatus: Object {id: integer, userId: text, gameSecret: number, gameOver:Boolean, remainingTries: number}}
-
-//updateRecord - updates a user record in the database
-//Inputs - {id: text /*user identification*/, {status: Object {gameOver: Boolean, remainingTries: Number}, gameSecret: number /*Bot generated random number*/}}
-//Outputs - {error: Boolean}
-
-const pool = require("./db-client");
+const pool = require("./db-clientpool");
 
 const createRecord = async (dataObj, userId) => {
   const client = await pool.connect();

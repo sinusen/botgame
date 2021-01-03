@@ -1,3 +1,5 @@
+// db-clientpool.js - Global pool of clients for all DB connections
+
 const { Pool } = require("pg");
 
 config = {
